@@ -1,0 +1,35 @@
+---
+- name: Test playbook
+  hosts: testservers
+  become: true
+
+  tasks:
+    - name: Install Java
+      ansible.builtin.yum:
+        name: java-1.8.0-openjdk
+        state: present
+
+    - name: Install Maven
+      ansible.builtin.yum:
+        name: maven
+        state: present
+
+    - name: Install Git
+      ansible.builtin.yum:
+        name: git
+        state: present
+
+    - name: Clone the repository
+      ansible.builtin.git:
+        repo: 'https://github.com/ArtemOganesyan/smstests.git'
+        dest: /home/ec2-user/smstests
+
+    - name: Run tests
+      ansible.builtin.command:
+        cmd: mvn test
+        chdir: /home/ec2-user/smstests 
+
+    - name: Run Main
+      ansible.builtin.command:
+        cmd: mvn exec:java -Dexec.mainClass="SMS.Main"
+        chdir: /home/ec2-user/smstests

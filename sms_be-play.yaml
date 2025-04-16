@@ -1,0 +1,19 @@
+---
+- name: Test playbook
+  hosts: testservers
+  become: true
+
+  pre_tasks:
+    - name: Enable amzn2-core repository
+      command: amazon-linux-extras enable java-openjdk11
+      when: ansible_distribution == "Amazon" and ansible_distribution_major_version == "2"
+
+    - name: Update yum cache if needed.
+      yum: 
+      update_cache: true 
+
+  tasks:
+    - name: Install Java.
+      ansible.builtin.yum:
+        name: java-23-amazon-corretto
+        state: present

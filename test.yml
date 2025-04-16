@@ -1,0 +1,10 @@
+---
+- name: Test playbook
+  hosts: testservers
+  tasks:
+    - name: Nginx server
+      ansible.builtin.include_role:
+        name: nginx
+        state: present
+      debug:
+        msg: "This is a test task"
